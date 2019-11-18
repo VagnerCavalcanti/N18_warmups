@@ -15,7 +15,37 @@
 
 -- Return the same list as before, but with only the top 3 customers in each country.
 
-
+WITH customer_info as (
+	SELECT 
+	customer_id,
+	country
+from customers
+		),
+product_info as (
+	SELECT
+	order_id,
+	product_id,
+	unit_price,
+	quantity,
+	discount
+FROM order_details
+		),
+price_product as (
+	SELECT 
+	customer_id,
+	country,
+	order_id,
+	product_id,
+	unit_price * quantity as product_price
+FROM 
+	customer_info,
+	product_info
+		)
+SELECT 
+	customer_id,
+	country,
+	RANK () OVER (PARTITION BY product_price ORDER BY country DESC)
+FROM price_product
 
 
 
